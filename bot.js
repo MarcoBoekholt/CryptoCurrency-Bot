@@ -10,7 +10,7 @@ var currencyInfo;
 client.on("ready", () => {
     console.log("Bot is online");
     client.user.setStatus("online");
-    client.user.setGame("?help");
+    client.user.setGame(config.prefix + "help | Server: " + client.guilds.size + " | Users: " + client.users.size);
 });
 
 client.on("message", message => {
@@ -20,26 +20,36 @@ client.on("message", message => {
             message.channel.send({embed: {
                 color: 0xff8040,
                 fields: [{
-                    name: "?help",
+                    name: config.prefix + "help",
                     value: "See all the commands"
                 },
                 {
-                    name: "?list",
+                    name: config.prefix + "list",
                     value: "See the list of currency's"
                 },
                 {
-                    name: "?currency <crypto>",
+                    name: config.prefix + "currency <crypto>",
                     value: "Get information about a currency"
                 },
                 {
-                    name: "?info",
+                    name: config.prefix + "info",
                     value: "Information about the bot"
                 }]
             }
             });
             break;
         case (prefix + "list"):
+        var currencyList = [];
+            request.get('https://api.coinmarketcap.com/v1/ticker/', (err, res, body) => {
+                var listCurrency = JSON.parse(body);
+                for (var i = 0; i < listCurrency.length; i++) {
+                    currencyList.push(`${listCurrency[i].id}`);
+                }   
+                message.channel.send("**Currency list**\n*use these id in the ?currency command*\n\n");     
+                message.channel.send(currencyList);
 
+                if (err) { return console.log(err); }
+            });
             break;
         case (prefix + "currency"):
             var currency = message.content.split(' ');
