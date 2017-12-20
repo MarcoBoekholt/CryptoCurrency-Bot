@@ -4,7 +4,7 @@ const request = require("request")
 
 const config = require("./config.json")
 
-const prefix = "?";
+const prefix = config.prefix;
 
 var currency;
 
