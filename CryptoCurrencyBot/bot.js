@@ -2,6 +2,8 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 const request = require("request")
 
+const config = require("./config.json")
+
 const prefix = "?";
 
 var currency;
@@ -33,4 +35,4 @@ client.on("message", message => {
     }
 });
 
-client.login("MzkyODAxNDkzNjkyMDU1NTUz.DRsgeg.GZTwtl6eLulLAvVjnwdOzEz1rzQ");
+client.login("config.token");
