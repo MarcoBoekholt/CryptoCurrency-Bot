@@ -7,6 +7,18 @@ const prefix = config.prefix;
 
 var currencyInfo;
 
+function MillisecondsToClock(ms) {
+    hours = Math.floor(ms / 3600000),
+    minutes = Math.floor((ms % 3600000) / 60000),
+    seconds = Math.floor(((ms % 360000) % 60000) / 1000)
+        return {
+        hours : hours,
+        minutes : minutes,
+        seconds : seconds,
+        clock : hours + " hour(s), " + minutes + " minute(s), " + seconds + " second(s)"
+    };
+}
+
 client.on("ready", () => {
     console.log("Bot is online");
     client.user.setStatus("online");
@@ -106,7 +118,40 @@ client.on("message", message => {
             });
             break;
         case (prefix + "info"):
-
+            message.channel.send({embed: {
+                description: "A bot to send you the current value of a specific cryptocurrency.",
+                color: 7268675,
+                author: {
+                  name: "Bot information"
+                },
+                fields: [
+                  {
+                    name: "Total users:",
+                    value: client.users.size,
+                    inline: true
+                  },
+                  {
+                    name: "Total servers:",
+                    value: client.guilds.size,
+                    inline: true
+                  },
+                  {
+                    name: "Uptime:",
+                    value: MillisecondsToClock(client.uptime).clock
+                  },
+                  {
+                    name: "Made By:",
+                    value: "<@87156859080814592>",
+                    inline: true
+                  },
+                  {
+                    name: "Version",
+                    value: "1.0.0",
+                    inline: true
+                  }
+                ]
+            }
+            });
         break;
     }
 });
