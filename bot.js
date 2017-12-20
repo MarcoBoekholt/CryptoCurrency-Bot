@@ -3,12 +3,7 @@ const client = new Discord.Client();
 const request = require("request")
 
 const config = require("./config.json")
-
 const prefix = config.prefix;
-
-var currency;
-
-var body;
 
 client.on("ready", () => {
     console.log("Bot is online");
@@ -20,19 +15,65 @@ client.on("message", message => {
     var msg = message.content.split(' ');
     switch (msg[0]) {
         case (prefix + "help"):
-            message.channel.sendMessage("Command list :\n```!!media - See help about the media player\n!!botversion - See informations about the bot```");
+            message.channel.send({embed: {
+                color: 0xff8040,
+                fields: [{
+                    name: "?help",
+                    value: "See all the commands"
+                },
+                {
+                    name: "?list",
+                    value: "See the list of currency's"
+                },
+                {
+                    name: "?currency <crypto>",
+                    value: "Get information about a currency"
+                },
+                {
+                    name: "?info",
+                    value: "Information about the bot"
+                }]
+            }
+            });
+            break;
+        case (prefix + "list"):
+
             break;
         case (prefix + "currency"):
-            currency = message.content.split(' ');
+            var currency = message.content.split(' ');
             currency.shift();
             currency = currency.join(' ');
             request.get('https://api.coinmarketcap.com/v1/ticker/' + currency + '/', (err, res, body) => {
                 let currencyInfo = JSON.parse(body);
-                message.channel.send(`Rank: ${currencyInfo[0].rank} \n\nPrice USD: ${currencyInfo[0].price_usd} \nPrice BTC: ${currencyInfo[0].price_btc} \n\nMarket Cap: ${currencyInfo[0].market_cap_usd} \n24h volume: NaN \nMax supply: ${currencyInfo[0].max_supply} \n\nChange 1h: ${currencyInfo[0].percent_change_1h} \nChange 24h: ${currencyInfo[0].percent_change_24h} \nChange 7 days: ${currencyInfo[0].percent_change_7d}`);
+                const embed = new Discord.RichEmbed()
+                .setTitle(`Price of ${currencyInfo[0].name} [${currencyInfo[0].symbol}]`)
+                
+                .setColor(0xff0000)
+                .setDescription("[More info](http://www.coinmarketcap.com/currencies/" + currency+ ")")
+                .setThumbnail("https://files.coinmarketcap.com/static/img/coins/32x32/"+ currency +".png")
+                
+                .addField("\nRank",
+                `${currencyInfo[0].rank}`)
+                .addField("Price USD",
+                `${currencyInfo[0].price_usd}`)
+                .addField("Price BTC",
+                `${currencyInfo[0].price_btc}`)
+                .addField("Change 1h",
+                `${currencyInfo[0].percent_change_1h}`)
+                .addField("Change 24h",
+                `${currencyInfo[0].percent_change_24h}`)
+                .addField("Change 7d",
+                `${currencyInfo[0].percent_change_7d}`);
+
+                message.channel.send({embed});
+                
                 if (err) { return console.log(err); }
             });
             break;
+        case (prefix + "info"):
+
+        break;
     }
 });
 
-client.login("config.token");
+client.login(config.token);
