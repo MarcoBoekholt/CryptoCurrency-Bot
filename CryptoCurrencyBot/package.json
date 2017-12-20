@@ -1,0 +1,15 @@
+{
+  "name": "cryptocurrencybot",
+  "version": "0.0.1",
+  "description": "A discord bot that will show the CryptoCurrency value",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Marco Boekholt",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^11.2.1",
+    "request": "^2.83.0"
+  }
+}
