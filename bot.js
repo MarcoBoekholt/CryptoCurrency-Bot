@@ -5,6 +5,8 @@ const request = require("request")
 const config = require("./config.json")
 const prefix = config.prefix;
 
+var currencyInfo;
+
 client.on("ready", () => {
     console.log("Bot is online");
     client.user.setStatus("online");
@@ -44,7 +46,8 @@ client.on("message", message => {
             currency.shift();
             currency = currency.join(' ');
             request.get('https://api.coinmarketcap.com/v1/ticker/' + currency + '/', (err, res, body) => {
-                let currencyInfo = JSON.parse(body);
+                currencyInfo = JSON.parse(body);
+                if (`${currencyInfo[0].percent_change_1h}`.toString().includes("-")){
                 const embed = new Discord.RichEmbed()
                 .setTitle(`Price of ${currencyInfo[0].name} [${currencyInfo[0].symbol}]`)
                 
@@ -55,18 +58,40 @@ client.on("message", message => {
                 .addField("\nRank",
                 `${currencyInfo[0].rank}`)
                 .addField("Price USD",
-                `${currencyInfo[0].price_usd}`)
+                `$${currencyInfo[0].price_usd}`)
                 .addField("Price BTC",
-                `${currencyInfo[0].price_btc}`)
+                `\u20BF${currencyInfo[0].price_btc}`)
                 .addField("Change 1h",
-                `${currencyInfo[0].percent_change_1h}`)
+                `${currencyInfo[0].percent_change_1h}%`)
                 .addField("Change 24h",
-                `${currencyInfo[0].percent_change_24h}`)
+                `${currencyInfo[0].percent_change_24h}%`)
                 .addField("Change 7d",
-                `${currencyInfo[0].percent_change_7d}`);
+                `${currencyInfo[0].percent_change_7d}%`);
 
                 message.channel.send({embed});
+            } else {
+                const embed = new Discord.RichEmbed()
+                .setTitle(`Price of ${currencyInfo[0].name} [${currencyInfo[0].symbol}]`)
                 
+                .setColor(0x00ff00)
+                .setDescription("[More info](http://www.coinmarketcap.com/currencies/" + currency+ ")")
+                .setThumbnail("https://files.coinmarketcap.com/static/img/coins/32x32/"+ currency +".png")
+                
+                .addField("\nRank",
+                `${currencyInfo[0].rank}`)
+                .addField("Price USD",
+                `$${currencyInfo[0].price_usd}`)
+                .addField("Price BTC",
+                `\u20BF${currencyInfo[0].price_btc}`)
+                .addField("Change 1h",
+                `${currencyInfo[0].percent_change_1h}%`)
+                .addField("Change 24h",
+                `${currencyInfo[0].percent_change_24h}%`)
+                .addField("Change 7d",
+                `${currencyInfo[0].percent_change_7d}%`);
+
+                message.channel.send({embed});
+            }
                 if (err) { return console.log(err); }
             });
             break;
