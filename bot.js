@@ -25,16 +25,22 @@ client.on("ready", () => {
     console.log("Bot is online");
     client.user.setStatus("online");
     client.user.setGame(config.prefix + "help | Server: " + client.guilds.size );
+    exports.totalUsers = `${client.guilds.map(g => g.memberCount)}`;
+    exports.TotalServers = `${client.guilds.size}`;
 });
 
 client.on("guildCreate", guild => {
     console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
     client.user.setGame(config.prefix + "help | Server: " + client.guilds.size);
+    exports.totalUsers = `${client.guilds.map(g => g.memberCount)}`;
+    exports.TotalServers = `${client.guilds.size}`;
 });
 
 client.on("guildDelete", guild => {
     console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
     client.user.setGame(config.prefix + "help | Server: " + client.guilds.size);
+    exports.totalUsers = `${client.guilds.map(g => g.memberCount)}`;
+    exports.TotalServers = `${client.guilds.size}`;
   });
 
 client.on("message", message => {
@@ -170,5 +176,4 @@ client.on("message", message => {
         break;
     }
 });
-
 client.login(config.token);
