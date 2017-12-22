@@ -25,22 +25,29 @@ client.on("ready", () => {
     console.log("Bot is online");
     client.user.setStatus("online");
     client.user.setGame(config.prefix + "help | Server: " + client.guilds.size );
-    exports.totalUsers = `${client.guilds.map(g => g.memberCount)}`;
+    exports.totalUsers = `${client.users.size}`;
     exports.TotalServers = `${client.guilds.size}`;
+    exports.TotalUptime = `${MillisecondsToClock(client.uptime).clock}`;
+    const guildNames = client.guilds.map(g => g.name);
+    exports.totalServerName = guildNames;
 });
 
 client.on("guildCreate", guild => {
     console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
     client.user.setGame(config.prefix + "help | Server: " + client.guilds.size);
-    exports.totalUsers = `${client.guilds.map(g => g.memberCount)}`;
+    exports.totalUsers = `${client.users.size}}`;
     exports.TotalServers = `${client.guilds.size}`;
+    const guildNames = client.guilds.map(g => g.name);
+    exports.totalServerName = guildNames;
 });
 
 client.on("guildDelete", guild => {
     console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
     client.user.setGame(config.prefix + "help | Server: " + client.guilds.size);
-    exports.totalUsers = `${client.guilds.map(g => g.memberCount)}`;
+    exports.totalUsers = `${client.users.size}`;
     exports.TotalServers = `${client.guilds.size}`;
+    const guildNames = client.guilds.map(g => g.name);
+    exports.totalServerName = guildNames;
   });
 
 client.on("message", message => {
